@@ -25,13 +25,7 @@ jobs:
               uses: hashicorp/setup-terraform@v3
             
             - name: Terraform Init
-              run: |
-                export ARM_CLIENT_ID = $ARM_CLIENT_ID
-                export ARM_CLIENT_SECRET = $ARM_CLIENT_SECRET
-                export ARM_SUBSCRIPTION_ID = $ARM_SUBSCRIPTION_ID
-                export ARM_TENANT_ID = $ARM_TENANT_ID
-
-                terraform init
+              run: terraform init
             - name: Terraform fmt
               id: fmt
               run: terraform fmt -check
