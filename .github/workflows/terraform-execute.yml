@@ -1,0 +1,35 @@
+name: 'Terraform'
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+jobs:
+    terraform:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            
+            - name: Setup terraform
+              uses: hashicorp/setup-terraform@v3
+            
+            - name: Terraform Init
+              run: |
+                export ARM_CLIENT_ID = $ARM_CLIENT_ID
+                export ARM_CLIENT_SECRET = $ARM_CLIENT_SECRET
+                export ARM_SUBSCRIPTION_ID = $ARM_SUBSCRIPTION_ID
+                export ARM_TENANT_ID = $ARM_TENANT_ID
+
+                terraform init
+              env:
+                ARM_CLIENT_ID: ${{secrets.AZURE_CLIENT_ID}}
+                ARM_CLIENT_SECRET: ${{secrets.AZURE_CLIENT_SECRET}}
+                ARM_SUBSCRIPTION_ID: ${{secrets.AZURE_SUBSCRIPTION_ID}}
+                ARM_TENANT_ID: ${{secrets.AZURE_TENANT_ID}}
+
+            - name: Terraform fmt
+              id: fmt
+              run: terraform fmt -check
