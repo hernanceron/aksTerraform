@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: samplems
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mi-samplems
+  template:
+    metadata:
+      labels:
+        app: mi-samplems
+    spec:
+      containers:
+      - name: mi-samplems
+        image: sampleContainerRegistry1.azurecr.io/samplems:v2
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mi-samplems-service
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: mi-samplems
